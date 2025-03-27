@@ -18,12 +18,17 @@ from math import nan
 from bs4 import BeautifulSoup
 from datetime import datetime
 
+FIGHT_URL_PATH = 'C:\Users\thoma\OneDrive\Documents\Python\MMA Betting\data\fight_urls.txt'
+FIGHTER_STATS_PATH = 'C:\Users\thoma\OneDrive\Documents\Python\MMA Betting\data\fighter_stats.txt'
+FIGHTER_URL_PATH = 'C:\Users\thoma\OneDrive\Documents\Python\MMA Betting\fighter_urls.txt'
+
 # Helper functions
 
 def get_completed_event_urls():
   """Function to get all the event links so we can access them and scrape data there"""
 
-  main_url = "http://ufcstats.com/statistics/events/completed?page=all" #From this page we access all the completed events to get our data
+  #From this page we access all the completed events to get our data
+  main_url = "http://ufcstats.com/statistics/events/completed?page=all"
 
   #Access the page with all conpleted events
   response = requests.get(main_url)
@@ -266,7 +271,7 @@ def get_fighters_stats(fighter_urls):
       print(i, "out of", len(fighter_urls))
 
       # Save the result to a text file on each iteration
-      with open(r'C:\Users\thoma\OneDrive\Documents\CS 529\fighters_stats.txt', 'a') as file:
+      with open(FIGHTER_STATS_PATH, 'a') as file:
         for key, value in fighter_stats_dict.items():
             file.write(f"{key}: {value}\n")
         file.write("\n")
@@ -823,14 +828,14 @@ def create_large_dataset(url_range = None):
     '''
     # TODO - Would be nice to speed up the original process by creating a unique list of fighter URLS in the first place.
 
-    with open(r'C:\Users\thoma\OneDrive\Documents\CS 529\fight_urls.txt', 'r') as file:
+    with open(FIGHT_URL_PATH, 'r') as file:
         fight_urls = file.readlines()
     fight_urls = [line.strip() for line in fight_urls]
 
     # Remove duplicates using set
     fight_urls = list(set(fight_urls))
 
-    with open(r'C:\Users\thoma\OneDrive\Documents\CS 529\fighter_urls.txt', 'r') as file:
+    with open(FIGHTER_URL_PATH, 'r') as file:
         fighter_urls = file.readlines()
     fighter_urls = [line.strip() for line in fighter_urls]
 

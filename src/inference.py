@@ -1,12 +1,12 @@
 import joblib
 import pandas as pd
-import openpyxl
+from openpyxl import load_workbook
 
-"""print("Loading in models")
+print("Loading in models")
 post_fight_model = joblib.load('models\\post_fight_model.joblib')
 win_pred_model = joblib.load('models\\win_pred_model.joblib')
 print("Models loaded successfully.")
-"""
+
 # Column names
 pre_features_numeric = [
     "r_wins_agg", "r_losses_agg", "r_height_agg", "r_weight_agg", "r_reach_agg", 
@@ -53,8 +53,10 @@ fighters = pd.read_csv("data\\fighter_stats.csv")
 
 # Read in spreadsheet to log predictions
 predictions = pd.read_excel("Predictions.xlsx")
+wb = load_workbook("Predictions.xlsx")
+ws = wb["New"]
 
-for row in predictions.itertuples(index=False):
+for i, row in enumerate(predictions.itertuples(index=False), start = 2):
 
     fighter_1 = row.Fighter_1
     fighter_2 = row.Fighter_2
@@ -65,13 +67,23 @@ for row in predictions.itertuples(index=False):
     fighter_1_stats = fighters[fighters["name"] == fighter_1]
     fighter_2_stats = fighters[fighters["name"] == fighter_2]
 
+    if fighter_1_stats.empty or fighter_2_stats.empty:
+
+        if fighter_1_stats.empty:
+            print(f"⚠️ Warning: Fighter '{fighter_1}' not found in dataset. Skipping row {i}.")
+
+        if fighter_2_stats.empty:
+            print(f"⚠️ Warning: Fighter '{fighter_2}' not found in dataset. Skipping row {i}.")
+
+        continue  # Skip to the next iteration
+
     weight = [weight_classes[weight]]
 
     # List formatted
     fighters_concat = fighter_1_stats[col_ordering].iloc[0].tolist() + fighter_2_stats[col_ordering].iloc[0].tolist() + weight + is_title + gender + [fighter_1_stats["stance"].iloc[0]] + [fighter_2_stats["stance"].iloc[0]]
 
     # DataFrame formatted for input into model
-    fight = pd.DataFrame(fighters_concat, columns = pre_features_numeric + pre_features_categorical)
+    fight = pd.DataFrame([fighters_concat], columns = pre_features_numeric + pre_features_categorical)
 
     print("Calculating post fight stats predictions")
     post_fight_predictions = post_fight_model.predict(fight)
@@ -82,4 +94,9 @@ for row in predictions.itertuples(index=False):
 
     print("Calculating win probabilities")
     win_probabilities = win_pred_model.predict_proba(combined_input)
-    print(f"{fighter_1} Win Probability: {win_probabilities[0][0]}\n{fighter_2} Win Probability: {win_probabilities[0][1]}")
+    print(f"{fighter_1} Win Probability: {win_probabilities[0][0]}\n{fighter_2} Win Probability: {win_probabilities[0][1]}\n")
+
+    ws.cell(row=i, column=6, value=f'{win_probabilities[0][0]}')
+    ws.cell(row=i, column=7, value=f'{win_probabilities[0][1]}')
+    
+wb.save("Predictions.xlsx")
