@@ -18,9 +18,9 @@ from math import nan
 from bs4 import BeautifulSoup
 from datetime import datetime
 
-FIGHT_URL_PATH = 'C:\Users\thoma\OneDrive\Documents\Python\MMA Betting\data\fight_urls.txt'
-FIGHTER_STATS_PATH = 'C:\Users\thoma\OneDrive\Documents\Python\MMA Betting\data\fighter_stats.txt'
-FIGHTER_URL_PATH = 'C:\Users\thoma\OneDrive\Documents\Python\MMA Betting\fighter_urls.txt'
+FIGHT_URL_PATH = r'C:\Users\thoma\OneDrive\Documents\Python\MMA Betting\fight_urls.txt'
+FIGHTER_STATS_PATH = r'C:\Users\thoma\OneDrive\Documents\Python\MMA Betting\fighter_stats.txt'
+FIGHTER_URL_PATH = r'C:\Users\thoma\OneDrive\Documents\Python\MMA Betting\fighter_urls.txt'
 
 # Helper functions
 
@@ -816,16 +816,19 @@ def calculate_diff(df):
     ]
 
     for col in columns_to_diff:
-        df[f'{col}_diff'] = df[f'r_{col}'] - df[f'b_{col}']
+        if f'r_{col}' in df.columns and f'b_{col}' in df.columns:
+            df[f'{col}_diff'] = df[f'r_{col}'] - df[f'b_{col}']
+        else:
+            print(f"Warning: Missing columns {f'r_{col}'} or {f'b_{col}'} in DataFrame.")
 
     return df
 
 def create_large_dataset(url_range = None):
     """Function to create a large dataset"""
-    '''
+    
     fight_urls = get_fight_urls(url_range)
     fighter_urls = get_fighter_urls(fight_urls)
-    '''
+    
     # TODO - Would be nice to speed up the original process by creating a unique list of fighter URLS in the first place.
 
     with open(FIGHT_URL_PATH, 'r') as file:
@@ -851,7 +854,7 @@ def create_large_dataset(url_range = None):
     full_fight_data = combine_fight_and_personal_stats(total_page_dicts, red_fighters_dicts, blue_fighters_dicts)
     full_fight_data = calculate_diff(full_fight_data)
     completed_events_large_df = pd.DataFrame(full_fight_data)
-    completed_events_large_df.to_csv('completed_events_large.csv', index=False)
+    completed_events_large_df.to_csv('completed_events_large_03272025.csv', index=False)
     print('Large dataset has been collected you can access it in the completed_events_large.csv file')
     print('All fight urls can be found in fight_urls.txt')
     print('All fighter urls can be found in the fighter_stats.txt')
