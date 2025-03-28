@@ -45,7 +45,8 @@ weight_classes = {
     "Hw" : "Heavyweight",
     "Ws" : "Women's Strawweight",
     "Wf" : "Women's Flyweight",
-    "Wb" : "Women's Bantamweight"
+    "Wb" : "Women's Bantamweight",
+    "Cw" : "Catch Weight"
 }
 
 # Read in data for automation

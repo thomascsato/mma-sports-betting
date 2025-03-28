@@ -1,8 +1,8 @@
 import csv
 
 # Define the input and output file paths
-input_file = 'C:\\Users\\thoma\\OneDrive\\Documents\\CS 529\\fighters_stats.txt'  # Replace with your .txt file name
-output_file = 'fighter_stats.csv'  # Output .csv file name
+input_file = r'C:\Users\thoma\OneDrive\Documents\Python\MMA Betting\fighter_stats.txt'  # Replace with your .txt file name
+output_file = 'fighter_stats_03272025.csv'  # Output .csv file name
 
 # Initialize a list to hold each fighter's information
 fighters_data = []

@@ -8,6 +8,9 @@ from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 import joblib
 
+POST_PATH = r'models\post_fight_model_03272025.joblib'
+PRED_PATH = r'models\win_pred_model_03272025.joblib'
+
 def duplicate_and_switch(df):
     """This function will double the dataset, switching the red and blue fighter in order
     to not fit the model based on order of fighter in the data."""
@@ -129,7 +132,7 @@ def train_post_fight_model(X_pre, y_post, pre_features_numeric, pre_features_cat
     model.fit(X_train, y_train_imputed)
     print("Model fit successfully.")
 
-    joblib.dump(model, 'models\\post_fight_model_1.joblib')
+    joblib.dump(model, POST_PATH)
 
     return model
 
@@ -164,7 +167,7 @@ def train_win_prob_model(X_all, y_win, all_features_numeric, all_features_catego
     # Fit the pipeline
     model.fit(X_train, y_train)
 
-    joblib.dump(model, 'models\\win_pred_model_1.joblib')
+    joblib.dump(model, PRED_PATH)
 
     return model
 

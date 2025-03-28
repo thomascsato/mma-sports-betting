@@ -19,8 +19,8 @@ COLUMNS_TO_DROP = ["r_SLpM_total", "r_SApM_total", "r_sig_str_acc_total", "r_td_
                    "age_diff", "height_diff", "weight_diff", "reach_diff"
 ]
 
-fighters = pd.read_csv("MMA_Fighter_Compare\\data\\fighter_stats.csv")
-completed_fights = pd.read_csv("MMA_Fighter_Compare\\data\\completed_events_large.csv")
+fighters = pd.read_csv(r"data\fighter_stats_03272025.csv")
+completed_fights = pd.read_csv(r"data\completed_events_large_03272025.csv")
 
 completed_fights_new = completed_fights.drop(columns=COLUMNS_TO_DROP)
 
@@ -48,4 +48,4 @@ result["sub_avg_agg_diff"] = result["r_sub_avg_agg"] - result["b_sub_avg_agg"]
 
 result['winner'] = result['winner'].apply(lambda x: 1 if x == 'Red' else 0)
 
-result.to_csv("MMA_Fighter_Compare\\data\\all_fights_final.csv", index=False)
+result.to_csv(r"data\all_fights_final_03272025.csv", index=False)
